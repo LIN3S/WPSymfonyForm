@@ -1,0 +1,21 @@
+{
+  "name": "lin3s/wp-symfony-form",
+  "description": "Symfony form integration for WordPress",
+  "homepage": "http://lin3s.com",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gorka Laucirica",
+      "email": "gorka@lin3s.com"
+    }
+  ],
+  "require": {
+    "symfony/validation": "~2.3",
+    "symfony/form": "~2.3",
+    "symfony/translation": "~2.3"
+  },
+  "autoload": {
+    "psr-4": {"LIN3S\\WPRouting\\": "src"}
+  }
+}
