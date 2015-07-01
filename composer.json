@@ -17,6 +17,6 @@
     "symfony/twig-bridge": "~2.3"
   },
   "autoload": {
-    "psr-4": {"LIN3S\\WPRouting\\": "src"}
+    "psr-4": {"LIN3S\\WPSymfonyForm\\": "src"}
   }
 }
