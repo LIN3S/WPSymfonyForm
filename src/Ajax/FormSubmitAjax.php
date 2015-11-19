@@ -2,7 +2,6 @@
 
 namespace LIN3S\WPSymfonyForm\Ajax;
 
-use LIN3S\WPFoundation\Ajax\Ajax;
 use LIN3S\WPSymfonyForm\Controller\AjaxController;
 use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
 
@@ -11,14 +10,15 @@ use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
  *
  * @author Gorka Laucirica <gorka@lin3s.com>
  */
-class FormSubmitAjax extends Ajax
+class FormSubmitAjax
 {
     protected $action = 'form_submit';
 
     protected $formWrapperRegistry;
 
     public function __construct(FormWrapperRegistry $formWrapperRegistry) {
-        parent::__construct();
+        add_action('wp_ajax_nopriv_' . $this->action, [$this, 'ajax']);
+        add_action('wp_ajax_' . $this->action, [$this, 'ajax']);
         $this->formWrapperRegistry = $formWrapperRegistry;
     }
 

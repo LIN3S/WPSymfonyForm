@@ -8,6 +8,7 @@
  * Version: 1.0
  * Author URI: http://lin3s.com/
  */
+
 new WPSymfonyForm();
 
 /**
@@ -17,11 +18,15 @@ new WPSymfonyForm();
  */
 class WPSymfonyForm {
     public function __construct() {
-        new \LIN3S\WPSymfonyForm\Ajax\FormSubmitAjax(
-            apply_filters(
-                'wp_symfony_form_wrappers',
-                new \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry()
-            )
+        add_action('init', [$this, 'loadPlugin']);
+    }
+
+    public function loadPlugin() {
+        $registry = apply_filters(
+            'wp_symfony_form_wrappers',
+            new \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry()
         );
+
+        new \LIN3S\WPSymfonyForm\Ajax\FormSubmitAjax($registry);
     }
 }

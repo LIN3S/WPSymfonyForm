@@ -24,8 +24,8 @@ class FormWrapperRegistry
                         get_class($wrapper)
                     ));
                 }
-                $this->formWrappers = $formWrappers;
             }
+            $this->formWrappers = $formWrappers;
         } else {
             throw new InvalidArgumentException(sprintf(
                 'FormWrapperRegistry requires an array of FormWrapperInterface objects, %s given',
