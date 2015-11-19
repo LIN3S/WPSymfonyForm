@@ -2,7 +2,6 @@
 
 namespace LIN3S\WPSymfonyForm;
 
-
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormFactoryBuilder;
