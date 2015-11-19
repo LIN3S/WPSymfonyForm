@@ -2,7 +2,7 @@
   "name": "lin3s/wp-symfony-form",
   "description": "Symfony form integration for WordPress",
   "homepage": "http://lin3s.com",
-  "type": "library",
+  "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
     {

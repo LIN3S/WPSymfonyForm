@@ -11,7 +11,7 @@ class Translator
 
     private static function createTranslator() {
         $translator = new BaseTranslator(ICL_LANGUAGE_CODE);
-        $translator->addLoader('xlf', new XliffFileLoader());
+        /*$translator->addLoader('xlf', new XliffFileLoader());
         $translator->addResource(
             'xlf',
             __DIR__ . '/../../../symfony/validator/Resources/translations/validators.en.xlf',
@@ -29,7 +29,7 @@ class Translator
             __DIR__ . '/../../../symfony/validator/Resources/translations/validators.eu.xlf',
             'eu',
             'validators'
-        );
+        );*/
 
         return $translator;
     }
