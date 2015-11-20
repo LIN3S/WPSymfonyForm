@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Euskalduna project.
+ * This file is part of the WPSymfonyForm project.
  *
  * Copyright (c) 2015 LIN3S <info@lin3s.com>
  *
@@ -16,8 +16,21 @@ use LIN3S\WPSymfonyForm\Translator;
 use LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * Class AjaxController
+ *
+ * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @package LIN3S\WPSymfonyForm\Controller
+ */
 class AjaxController
 {
+    /**
+     * Manages ajax call, if success executes success actions found in formWrapper
+     *
+     * @param \LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface $formWrapper
+     *
+     * @return string Javascript object notation (JSON) with the errors or empty if success
+     */
     public function ajaxAction(FormWrapperInterface $formWrapper)
     {
         $form = Forms::createFormFactory()->create($formWrapper->getForm());
@@ -35,6 +48,13 @@ class AjaxController
         }
     }
 
+    /**
+     * Returns serialized errors array
+     *
+     * @param \Symfony\Component\Form\FormInterface $form
+     *
+     * @return array
+     */
     protected function getFormErrors(FormInterface $form)
     {
         $errors = [];

@@ -17,6 +17,9 @@
     "symfony/twig-bridge": "~2.3",
     "symfony/config": "~2.3"
   },
+  "suggest": {
+    "wpackagist-plugin/timber-library": "Required by MailerAction"
+  },
   "autoload": {
     "psr-4": {"LIN3S\\WPSymfonyForm\\": "src"}
   }

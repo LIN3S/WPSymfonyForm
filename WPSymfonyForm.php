@@ -16,12 +16,21 @@ new WPSymfonyForm();
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
-class WPSymfonyForm {
-    public function __construct() {
+class WPSymfonyForm
+{
+    /**
+     * Construtor.
+     */
+    public function __construct()
+    {
         add_action('init', [$this, 'loadPlugin']);
     }
 
-    public function loadPlugin() {
+    /**
+     * Loads plugin
+     */
+    public function loadPlugin()
+    {
         $registry = apply_filters(
             'wp_symfony_form_wrappers',
             new \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry()
