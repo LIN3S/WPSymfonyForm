@@ -1,0 +1,108 @@
+#WP Symfony Forms
+
+Bridge to allow using Symfony Form with ease.
+ 
+##Installation
+
+If you are using composer run the following command:
+
+```bash
+$ composer require lin3s/wp-symfony-form
+```
+
+If your composer.json is properly set up you should find this package in plugins folder
+
+##Usage
+
+First of all, enable this plugin in the WordPress admin panel.
+
+To create your first form extend as usual from the `AbstractType` class provided by Symfony component.
+
+```php
+class ContactForm extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('name', 'text', [
+                    'constraints' => new Assert\NotBlank(),
+                    'label' => Translations::trans('Name and surname')
+                ])
+                ->add('email', 'email', [
+                    'constraints' => new Assert\Email(),
+                    'label' => Translations::trans('Email')
+                ])
+                ->add('phone', 'text', [
+                    'constraints' => new Assert\NotBlank(),
+                    'label' => Translations::trans('Phone')
+                ])
+                ->add('message', 'textarea', [
+                    'constraints' => new Assert\NotBlank(),
+                    'label' => Translations::trans('Your message')
+                ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'contact';
+    }
+}
+``` 
+
+To enable the Ajax calls for this form you need to subscribe to the `wp_symfony_form_wrappers` WordPress hook.
+
+```php
+add_filter('wp_symfony_form_wrappers', function($formWrappers) {
+    $formWrappers->add(new FormWrapper(
+        'Fully/Qualified/Namespace/ContactForm'
+    ));
+});
+```
+
+In case you want to use Twig for rendering a Bridge is provided, just run the following code line passing Twig instance
+
+```php
+TwigBridge::addExtension($twig, 'component/form.twig');
+```
+
+> `component/form.twig` is your custom form theme that will be used to render the forms. Check the docs about 
+[form customization](http://symfony.com/doc/current/cookbook/form/form_customization.html#what-are-form-themes) for
+further info.
+
+> In case you are using Timber you should use `twig_apply_filters` hook.
+
+### The FormWrapper
+
+The `FormWrapper` is a class designed to contain a form and all its related actions. As you've seen above a new instance is 
+created for each form you want to use in your WordPress project, and need to be registered inside the
+`FormWrapperRegistry`.
+
+As first parameter it receives the fully qualified namespace and as second parameter it receives an array of classes
+implementing `ActionInterface`.
+
+### Actions on success
+
+In case you need to perform any **server side** actions, it's as easy as to extend `ActionInterface` and to implement `execute()`
+method. A form instance will to be used as desired. Check `src/Action` folder to check already implemented actions.
+
+To bind this action to a specific form you need to add it in the `FormWrapper`.
+
+For **client side** success actions you can add your callback using the global `WPSymfonyForm` namespace as follows:
+
+```js
+    WPSymfonyForm.onSuccess(function ($form) {
+        if ($form.find('input[name="form_type"]').val() == 'contact') {
+          // ANYTHING YOU WANT TO DO 
+        }
+      });
+```
+
+
+
+
+
