@@ -11,7 +11,7 @@
 
 namespace LIN3S\WPSymfonyForm\Controller;
 
-use LIN3S\WPSymfonyForm\Forms;
+use LIN3S\WPSymfonyForm\Factory\FormFactory;
 use LIN3S\WPSymfonyForm\Translator;
 use LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface;
 use Symfony\Component\Form\FormInterface;
@@ -33,7 +33,7 @@ class AjaxController
      */
     public function ajaxAction(FormWrapperInterface $formWrapper)
     {
-        $form = Forms::createFormFactory()->create($formWrapper->getForm());
+        $form = FormFactory::get()->create($formWrapper->getForm());
         $form->handleRequest();
 
         if ($form->isValid()) {

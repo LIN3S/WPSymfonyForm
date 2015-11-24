@@ -63,5 +63,4 @@ class FormWrapper implements FormWrapperInterface
     {
         return $this->successActions;
     }
-
 }

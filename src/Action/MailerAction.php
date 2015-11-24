@@ -51,6 +51,9 @@ class MailerAction implements ActionInterface
         $this->subject = $subject;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute(FormInterface $form)
     {
         if(!class_exists('\Timber')) {

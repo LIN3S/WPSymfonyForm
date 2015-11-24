@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace LIN3S\WPSymfonyForm;
+namespace LIN3S\WPSymfonyForm\Factory;
 
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -17,27 +17,28 @@ use Symfony\Component\Form\FormFactoryBuilder;
 use Symfony\Component\Validator\ValidatorBuilder;
 
 /**
- * Class Forms
+ * Class FormFactory
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
-class Forms {
+class FormFactory
+{
     /**
      * Creates a form factory with the default configuration.
      *
      * @return \Symfony\Component\Form\FormFactoryInterface The form factory.
      */
-    public static function createFormFactory()
+    public static function get()
     {
-        return self::createFormFactoryBuilder()->getFormFactory();
+        return self::getBuilder()->getFormFactory();
     }
 
     /**
      * Creates a form factory builder with the default configuration.
      *
-     * @return FormFactoryBuilderInterface The form factory builder.
+     * @return \Symfony\Component\Form\FormFactoryBuilderInterface The form factory builder.
      */
-    public static function createFormFactoryBuilder()
+    public static function getBuilder()
     {
         $builder = new FormFactoryBuilder();
         $builder->addExtension(new CoreExtension());

@@ -17,29 +17,27 @@ use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
 /**
  * Form submit ajax class.
  *
- * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author  Gorka Laucirica <gorka.lauzirika@gmail.com>
  * @package LIN3S\WPSymfonyForm\Ajax
  */
 class FormSubmitAjax
 {
     /**
-     * @var string Action used by WordPress to identify this AJAX request
-     */
-    protected $action = 'form_submit';
-
-    /**
      * @var \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry
      */
-    protected $formWrapperRegistry;
+    private $formWrapperRegistry;
 
     /**
      * Constructor.
      *
      * @param \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry $formWrapperRegistry
+     * @param string                                            $action Action used by WordPress to identify this AJAX
+     *                                                                  request
      */
-    public function __construct(FormWrapperRegistry $formWrapperRegistry) {
-        add_action('wp_ajax_nopriv_' . $this->action, [$this, 'ajax']);
-        add_action('wp_ajax_' . $this->action, [$this, 'ajax']);
+    public function __construct(FormWrapperRegistry $formWrapperRegistry, $action = 'form_submit')
+    {
+        add_action('wp_ajax_nopriv_' . $action, [$this, 'ajax']);
+        add_action('wp_ajax_' . $action, [$this, 'ajax']);
         $this->formWrapperRegistry = $formWrapperRegistry;
     }
 
@@ -52,16 +50,14 @@ class FormSubmitAjax
 
         try {
             unset($_POST['action']);
-            if(count($_POST) !== 1) {
+            if (count($_POST) !== 1) {
                 throw new \InvalidArgumentException();
             }
             $formType = key($_POST);
             $formWrapper = $this->formWrapperRegistry->get($formType);
-            unset($_POST['form_type']);
-            unset($_POST['action']);
             echo $controller->ajaxAction($formWrapper);
             die();
-        } catch(\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             echo json_encode(["errors" => ["unknown form_type"]]);
             http_response_code(400);
             die();
