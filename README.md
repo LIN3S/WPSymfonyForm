@@ -64,6 +64,9 @@ add_filter('wp_symfony_form_wrappers', function($formWrappers) {
 });
 ```
 
+
+### Rendering the form
+
 In case you want to use Twig for rendering a Bridge is provided, just run the following code line passing Twig instance
 
 ```php
@@ -75,6 +78,14 @@ TwigBridge::addExtension($twig, 'component/form.twig');
 further info.
 
 > In case you are using Timber you should use `twig_apply_filters` hook.
+
+**Important** Submit event is binded to every element with `.form` class. In case you need to change it just do the following:
+
+```js
+WPSymfonyForm.formSelector = '.your-selector';
+```
+
+Also error container for each form item can be changed using `WPSymfonyForm.formErrorsSelector`.
 
 ### The FormWrapper
 
@@ -96,11 +107,14 @@ For **client side** success actions you can add your callback using the global `
 
 ```js
     WPSymfonyForm.onSuccess(function ($form) {
-        if ($form.find('input[name="form_type"]').val() == 'contact') {
+        if ($form.hasClass('form--contact')) {
           // ANYTHING YOU WANT TO DO 
         }
+        $form.find('.form__footer').html('<p>Form successfully submitted</p>');
       });
 ```
+
+> `onSuccess()` and `onError()` are available to hook into the form.
 
 
 

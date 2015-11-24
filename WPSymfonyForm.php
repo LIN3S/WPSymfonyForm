@@ -5,7 +5,7 @@
  * Plugin URI: http://lin3s.com
  * Description: Allows using forms the Symfony way
  * Author: LIN3S
- * Version: 1.0
+ * Version: 0.2.0
  * Author URI: http://lin3s.com/
  */
 
@@ -18,6 +18,8 @@ new WPSymfonyForm();
  */
 class WPSymfonyForm
 {
+    const VERSION = '0.2.0';
+
     /**
      * Construtor.
      */
@@ -37,5 +39,17 @@ class WPSymfonyForm
         );
 
         new \LIN3S\WPSymfonyForm\Ajax\FormSubmitAjax($registry);
+
+        wp_enqueue_script(
+            'wp-symfony-form',
+            plugin_dir_url( __FILE__ ) . '/src/Resources/js/wp-symfony-form.js',
+            ['jquery'],
+            self::VERSION,
+            true
+        );
+
+        wp_localize_script('wp-symfony-form', 'WPSymfonyFormSettings', [
+            'ajaxUrl'      => admin_url('admin-ajax.php'),
+        ]);
     }
 }

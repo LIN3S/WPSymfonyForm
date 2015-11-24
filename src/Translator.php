@@ -26,27 +26,21 @@ class Translator
      */
     private static $instance = null;
 
-    private static function createTranslator() {
+    private static function createTranslator()
+    {
         $translator = new BaseTranslator(ICL_LANGUAGE_CODE);
-        /*$translator->addLoader('xlf', new XliffFileLoader());
-        $translator->addResource(
-            'xlf',
-            __DIR__ . '/../../../symfony/validator/Resources/translations/validators.en.xlf',
-            'en',
-            'validators'
-        );
-        $translator->addResource(
-            'xlf',
-            __DIR__ . '/../../../symfony/validator/Resources/translations/validators.es.xlf',
-            'es',
-            'validators'
-        );
-        $translator->addResource(
-            'xlf',
-            __DIR__ . '/../../../symfony/validator/Resources/translations/validators.eu.xlf',
-            'eu',
-            'validators'
-        );*/
+        $translator->addLoader('xlf', new XliffFileLoader());
+
+        $languages = ['en', 'es', 'eu'];
+
+        foreach ($languages as $language) {
+            $translator->addResource(
+                'xlf',
+                get_home_path() . 'vendor/symfony/validator/Resources/translations/validators.' . $language . '.xlf',
+                $language,
+                'validators'
+            );
+        }
 
         return $translator;
     }
@@ -54,8 +48,9 @@ class Translator
     /**
      * @return \Symfony\Component\Translation\Translator
      */
-    public static function getTranslator() {
-        if(!self::$instance) {
+    public static function getTranslator()
+    {
+        if (!self::$instance) {
             self::$instance = self::createTranslator();
         }
 

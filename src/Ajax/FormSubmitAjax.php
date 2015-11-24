@@ -51,7 +51,12 @@ class FormSubmitAjax
         $controller = new AjaxController();
 
         try {
-            $formWrapper = $this->formWrapperRegistry->get($_POST['form_type']);
+            unset($_POST['action']);
+            if(count($_POST) !== 1) {
+                throw new \InvalidArgumentException();
+            }
+            $formType = key($_POST);
+            $formWrapper = $this->formWrapperRegistry->get($formType);
             unset($_POST['form_type']);
             unset($_POST['action']);
             echo $controller->ajaxAction($formWrapper);
