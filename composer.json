@@ -1,26 +1,40 @@
 {
-  "name": "lin3s/wp-symfony-form",
-  "description": "Symfony form integration for WordPress",
-  "homepage": "http://lin3s.com",
-  "type": "wordpress-plugin",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Gorka Laucirica",
-      "email": "gorka@lin3s.com"
+    "name": "lin3s/wp-symfony-form",
+    "description": "WordPress plugin to allow using Symfony form component with ease",
+    "homepage": "http://lin3s.com",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "LIN3S",
+            "email": "info@lin3s.com",
+            "homepage": "https://lin3s.com"
+        }
+    ],
+    "require": {
+        "php":                  ">=5.4",
+        "symfony/config":       "^2.3",
+        "symfony/form":         "^2.3",
+        "symfony/translation":  "^2.3",
+        "symfony/twig-bridge":  "^2.3",
+        "symfony/validator":    "^2.3"
+    },
+    "require-dev": {
+        "phpspec/phpspec":         "^2.3",
+        "lin3s/wp-phpspec-brigde": "^0.1"
+    },
+    "suggest": {
+        "wpackagist-plugin/timber-library": "Required if you want to use the MailerAction"
+    },
+    "autoload": {
+        "psr-4": {
+            "LIN3S\\WPSymfonyForm\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\LIN3S\\WPSymfonyForm\\": "spec/",
+            "fixtures\\LIN3S\\WPSymfonyForm\\": "spec/fixtures/"
+        }
     }
-  ],
-  "require": {
-    "symfony/validator": "~2.3",
-    "symfony/form": "~2.3",
-    "symfony/translation": "~2.3",
-    "symfony/twig-bridge": "~2.3",
-    "symfony/config": "~2.3"
-  },
-  "suggest": {
-    "wpackagist-plugin/timber-library": "Required by MailerAction"
-  },
-  "autoload": {
-    "psr-4": {"LIN3S\\WPSymfonyForm\\": "src"}
-  }
 }
