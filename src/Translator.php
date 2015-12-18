@@ -36,7 +36,7 @@ class Translator
         foreach ($languages as $language) {
             $translator->addResource(
                 'xlf',
-                get_home_path() . 'vendor/symfony/validator/Resources/translations/validators.' . $language . '.xlf',
+                ABSPATH . '/../vendor/symfony/validator/Resources/translations/validators.' . $language . '.xlf',
                 $language,
                 'validators'
             );
