@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the WPSymfonyForm project.
+ * This file is part of the WPSymfonyForm plugin.
  *
- * Copyright (c) 2015 LIN3S <info@lin3s.com>
+ * Copyright (c) 2015-2016 LIN3S <info@lin3s.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,10 +18,9 @@ use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 
 /**
- * Class TwigBridge
+ * Class TwigBridge.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
- * @package LIN3S\WPSymfonyForm\Twig
  */
 class TwigBridge
 {
@@ -33,7 +32,7 @@ class TwigBridge
      */
     public static function addExtension($twig, $formTheme = 'form_div_layout.html.twig')
     {
-        $formEngine = new TwigRendererEngine(array($formTheme));
+        $formEngine = new TwigRendererEngine([$formTheme]);
         $twig->addExtension(
             new FormExtension(new TwigRenderer($formEngine))
         );
@@ -46,4 +45,4 @@ class TwigBridge
 
         return $twig;
     }
-} 
+}

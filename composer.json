@@ -12,15 +12,15 @@
         }
     ],
     "require": {
-        "php":                  ">=5.4",
-        "symfony/config":       "^2.3",
-        "symfony/form":         "^2.3",
-        "symfony/translation":  "^2.3",
-        "symfony/twig-bridge":  "^2.3",
-        "symfony/validator":    "^2.3"
+        "php":                  "^5.5|^7.0",
+        "symfony/config":       "^2.3|^3.0",
+        "symfony/form":         "^2.3|^3.0",
+        "symfony/translation":  "^2.3|^3.0",
+        "symfony/twig-bridge":  "^2.3|^3.0",
+        "symfony/validator":    "^2.3|^3.0"
     },
     "require-dev": {
-        "phpspec/phpspec":         "^2.3",
+        "phpspec/phpspec":         "^2.4",
         "lin3s/wp-phpspec-brigde": "^0.1"
     },
     "suggest": {
@@ -28,13 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "LIN3S\\WPSymfonyForm\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "spec\\LIN3S\\WPSymfonyForm\\": "spec/",
-            "fixtures\\LIN3S\\WPSymfonyForm\\": "spec/fixtures/"
+            "LIN3S\\WPSymfonyForm\\": "src/LIN3S/WPSymfonyForm/"
         }
     }
 }

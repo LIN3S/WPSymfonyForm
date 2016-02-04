@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the WPSymfonyForm project.
+ * This file is part of the WPSymfonyForm plugin.
  *
- * Copyright (c) 2015 LIN3S <info@lin3s.com>
+ * Copyright (c) 2015-2016 LIN3S <info@lin3s.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,10 +17,9 @@ use LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class AjaxController
+ * Class AjaxController.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
- * @package LIN3S\WPSymfonyForm\Controller
  */
 class AjaxController
 {
@@ -37,13 +36,14 @@ class AjaxController
         $form->handleRequest();
 
         if ($form->isValid()) {
-            foreach($formWrapper->getSuccessActions() as $action) {
+            foreach ($formWrapper->getSuccessActions() as $action) {
                 $action->execute($form);
             }
 
             return json_encode([]);
         } else {
             http_response_code(400);
+
             return json_encode($this->getFormErrors($form));
         }
     }
@@ -66,6 +66,7 @@ class AjaxController
                 $errors[$child->getName()] = $this->getFormErrors($child);
             }
         }
+
         return $errors;
     }
 }

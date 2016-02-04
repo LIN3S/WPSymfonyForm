@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the WPSymfonyForm project.
+ * This file is part of the WPSymfonyForm plugin.
  *
- * Copyright (c) 2015 LIN3S <info@lin3s.com>
+ * Copyright (c) 2015-2016 LIN3S <info@lin3s.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,10 +15,9 @@ use LIN3S\WPSymfonyForm\Action\Interfaces\ActionInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class MailerAction
+ * Class MailerAction.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
- * @package LIN3S\WPSymfonyForm\Action
  */
 class MailerAction implements ActionInterface
 {
@@ -56,7 +55,7 @@ class MailerAction implements ActionInterface
      */
     public function execute(FormInterface $form)
     {
-        if(!class_exists('\Timber')) {
+        if (!class_exists('\Timber')) {
             throw new \InvalidArgumentException('Timber plugin is required to use MailerAction');
         }
 

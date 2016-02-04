@@ -42,7 +42,7 @@ class WPSymfonyForm
 
         wp_enqueue_script(
             'wp-symfony-form',
-            plugin_dir_url( __FILE__ ) . '/src/Resources/js/wp-symfony-form.js',
+            plugin_dir_url( __FILE__ ) . '/src/LIN3S/WPSymfonyForm/Resources/js/wp-symfony-form.js',
             ['jquery'],
             self::VERSION,
             true

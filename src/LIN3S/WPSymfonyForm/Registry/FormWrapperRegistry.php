@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the WPSymfonyForm project.
+ * This file is part of the WPSymfonyForm plugin.
  *
- * Copyright (c) 2015 LIN3S <info@lin3s.com>
+ * Copyright (c) 2015-2016 LIN3S <info@lin3s.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,11 +11,10 @@
 
 namespace LIN3S\WPSymfonyForm\Registry;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface;
 
 /**
- * Class FormWrapperRegistry
+ * Class FormWrapperRegistry.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
@@ -24,16 +23,18 @@ class FormWrapperRegistry
     protected $formWrappers;
 
     /**
-     * Initializes the registry with an array of wrappers
+     * Initializes the registry with an array of wrappers.
      *
      * @param FormWrapperInterface[] $formWrappers
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($formWrappers = [])
     {
         if (is_array($formWrappers)) {
             foreach ($formWrappers as $wrapper) {
                 if (!$wrapper instanceof FormWrapperInterface) {
-                    throw new InvalidArgumentException(sprintf(
+                    throw new \InvalidArgumentException(sprintf(
                         'FormWrapperRegistry requires an array of FormWrapperInterface objects, %s given',
                         get_class($wrapper)
                     ));
@@ -41,7 +42,7 @@ class FormWrapperRegistry
             }
             $this->formWrappers = $formWrappers;
         } else {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'FormWrapperRegistry requires an array of FormWrapperInterface objects, %s given',
                 get_class($formWrappers)
             ));
@@ -49,7 +50,7 @@ class FormWrapperRegistry
     }
 
     /**
-     * Gets a form wrapper by form name
+     * Gets a form wrapper by form name.
      *
      * @param string $formName
      *
@@ -72,13 +73,14 @@ class FormWrapperRegistry
     }
 
     /**
-     * Adds a form wrapper to the registry
+     * Adds a form wrapper to the registry.
      *
      * @param \LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface $formWrapper
      *
      * @return \LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface
      */
-    public function add(FormWrapperInterface $formWrapper) {
+    public function add(FormWrapperInterface $formWrapper)
+    {
         $this->formWrappers[] = $formWrapper;
     }
 }

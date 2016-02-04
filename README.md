@@ -72,10 +72,8 @@ add_filter('wp_symfony_form_wrappers', function($formWrappers) {
 ```
 
 
-### Rendering the form
-
+###Rendering the form
 In case you want to use Twig for rendering a Bridge is provided, just run the following code line passing Twig instance
-
 ```php
 TwigBridge::addExtension($twig, 'component/form.twig');
 ```
@@ -87,15 +85,13 @@ further info.
 > In case you are using Timber you should use `twig_apply_filters` hook.
 
 **Important** Submit event is binded to every element with `.form` class. In case you need to change it just do the following:
-
 ```js
 WPSymfonyForm.formSelector = '.your-selector';
 ```
 
 Also error container for each form item can be changed using `WPSymfonyForm.formErrorsSelector`.
 
-### The FormWrapper
-
+###The FormWrapper
 The `FormWrapper` is a class designed to contain a form and all its related actions. As you've seen above a new instance is 
 created for each form you want to use in your WordPress project, and need to be registered inside the
 `FormWrapperRegistry`.
@@ -103,15 +99,13 @@ created for each form you want to use in your WordPress project, and need to be 
 As first parameter it receives the fully qualified namespace and as second parameter it receives an array of classes
 implementing `ActionInterface`.
 
-### Actions on success
-
+###Actions on success
 In case you need to perform any **server side** actions, it's as easy as to extend `ActionInterface` and to implement `execute()`
 method. A form instance will to be used as desired. Check `src/Action` folder to check already implemented actions.
 
 To bind this action to a specific form you need to add it in the `FormWrapper`.
 
 For **client side** success actions you can add your callback using the global `WPSymfonyForm` namespace as follows:
-
 ```js
     WPSymfonyForm.onSuccess(function ($form) {
         if ($form.hasClass('form--contact')) {
@@ -120,5 +114,4 @@ For **client side** success actions you can add your callback using the global `
         $form.find('.form__footer').html('<p>Form successfully submitted</p>');
       });
 ```
-
 > `onSuccess()` and `onError()` are available to hook into the form.
