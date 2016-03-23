@@ -12,25 +12,25 @@
 namespace LIN3S\WPSymfonyForm\Controller;
 
 use LIN3S\WPSymfonyForm\Factory\FormFactory;
-use LIN3S\WPSymfonyForm\Translator;
-use LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface;
+use LIN3S\WPSymfonyForm\Translation\Translator;
+use LIN3S\WPSymfonyForm\Wrapper\FormWrapper;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class AjaxController.
+ * The controller that resolves AJAX call.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
 class AjaxController
 {
     /**
-     * Manages ajax call, if success executes success actions found in formWrapper
+     * Manages ajax call, if success executes success actions found in formWrapper.
      *
-     * @param \LIN3S\WPSymfonyForm\Wrapper\Interfaces\FormWrapperInterface $formWrapper
+     * @param FormWrapper $formWrapper The form wrapper
      *
-     * @return string Javascript object notation (JSON) with the errors or empty if success
+     * @return string
      */
-    public function ajaxAction(FormWrapperInterface $formWrapper)
+    public function ajaxAction(FormWrapper $formWrapper)
     {
         $form = FormFactory::get()->create($formWrapper->getForm());
         $form->handleRequest();
@@ -49,9 +49,9 @@ class AjaxController
     }
 
     /**
-     * Returns serialized errors array
+     * Returns serialized errors array.
      *
-     * @param \Symfony\Component\Form\FormInterface $form
+     * @param FormInterface $form The form
      *
      * @return array
      */
@@ -59,7 +59,7 @@ class AjaxController
     {
         $errors = [];
         foreach ($form->getErrors() as $error) {
-            $errors[] = Translator::getTranslator()->trans($error->getMessage(), [], 'validators');
+            $errors[] = Translator::instance()->trans($error->getMessage(), [], 'validators');
         }
         foreach ($form->all() as $child) {
             if (!$child->isValid()) {

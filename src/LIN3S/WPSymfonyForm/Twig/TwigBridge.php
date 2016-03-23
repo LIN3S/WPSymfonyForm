@@ -11,22 +11,22 @@
 
 namespace LIN3S\WPSymfonyForm\Twig;
 
-use LIN3S\WPSymfonyForm\Translator;
+use LIN3S\WPSymfonyForm\Translation\Translator;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 
 /**
- * Class TwigBridge.
+ * Twig bridge class.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
 class TwigBridge
 {
     /**
-     * @param        $twig
-     * @param string $formTheme
+     * @param mixed  $twig      The twig
+     * @param string $formTheme The form theme
      *
      * @return mixed
      */
@@ -37,10 +37,10 @@ class TwigBridge
             new FormExtension(new TwigRenderer($formEngine))
         );
 
-        $translator = Translator::getTranslator();
-
         $twig->addExtension(
-            new TranslationExtension($translator)
+            new TranslationExtension(
+                Translator::instance()
+            )
         );
 
         return $twig;

@@ -17,16 +17,17 @@ use Symfony\Component\Form\FormFactoryBuilder;
 use Symfony\Component\Validator\ValidatorBuilder;
 
 /**
- * Class FormFactory.
+ * Form factory final class.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author Beñat Espiña <benatespina@gmail.com>
  */
-class FormFactory
+final class FormFactory
 {
     /**
      * Creates a form factory with the default configuration.
      *
-     * @return \Symfony\Component\Form\FormFactoryInterface The form factory.
+     * @return \Symfony\Component\Form\FormFactoryInterface
      */
     public static function get()
     {
@@ -36,7 +37,7 @@ class FormFactory
     /**
      * Creates a form factory builder with the default configuration.
      *
-     * @return \Symfony\Component\Form\FormFactoryBuilderInterface The form factory builder.
+     * @return FormFactoryBuilder
      */
     public static function getBuilder()
     {

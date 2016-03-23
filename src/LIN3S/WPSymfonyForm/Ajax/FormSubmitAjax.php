@@ -22,16 +22,17 @@ use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
 class FormSubmitAjax
 {
     /**
-     * @var \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry
+     * The form wrapper registry.
+     *
+     * @var FormWrapperRegistry
      */
     private $formWrapperRegistry;
 
     /**
      * Constructor.
      *
-     * @param \LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry $formWrapperRegistry
-     * @param string                                            $action Action used by WordPress to identify this AJAX
-     *                                                                  request
+     * @param FormWrapperRegistry $formWrapperRegistry The form wrapper registry
+     * @param string              $action              Action used by WordPress to identify this AJAX request
      */
     public function __construct(FormWrapperRegistry $formWrapperRegistry, $action = 'form_submit')
     {
@@ -41,23 +42,22 @@ class FormSubmitAjax
     }
 
     /**
-     * Call to be executed on AJAX request
+     * Call to be executed on AJAX request.
      */
     public function ajax()
     {
-        $controller = new AjaxController();
-
         try {
             unset($_POST['action']);
             if (count($_POST) !== 1) {
                 throw new \InvalidArgumentException();
             }
+
             $formType = key($_POST);
             $formWrapper = $this->formWrapperRegistry->get($formType);
-            echo $controller->ajaxAction($formWrapper);
+            echo(new AjaxController())->ajaxAction($formWrapper);
             die();
         } catch (\InvalidArgumentException $e) {
-            echo json_encode(["errors" => ["unknown form_type"]]);
+            echo json_encode(['errors' => ['unknown form_type']]);
             http_response_code(400);
             die();
         }

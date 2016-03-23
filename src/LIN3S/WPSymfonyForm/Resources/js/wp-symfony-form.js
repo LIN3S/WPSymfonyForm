@@ -1,3 +1,15 @@
+/*
+ * This file is part of the WPSymfonyForm plugin.
+ *
+ * Copyright (c) 2015-2016 LIN3S <info@lin3s.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author Beñat Espiña <benatespina@gmail.com>
+ */
+
 var WPSymfonyForm = (function () {
   var successCallbacks = [],
     errorCallbacks = [];
@@ -25,18 +37,22 @@ var WPSymfonyForm = (function () {
       });
     }
   }
-})();
+}());
 
 (function ($) {
-  $(WPSymfonyForm.formSelector).submit(function (ev) {
-    ev.preventDefault();
-    var $form = $(ev.currentTarget);
+
+  $(WPSymfonyForm.formSelector).submit(function (event) {
+    var $form = $(event.currentTarget);
+
+    event.prevententDefault();
+
     $form.find('[type="submit"]').hide();
+
     $.ajax({
-      type: "POST",
+      type: 'POST',
       url: WPSymfonyFormSettings.ajaxUrl,
       data: $form.serialize() + '&action=form_submit',
-      dataType: "json",
+      dataType: 'json',
       success: function () {
         $form.find(WPSymfonyForm.formErrorsSelector).text('');
         WPSymfonyForm.triggerSuccessCallbacks($form);
@@ -54,4 +70,5 @@ var WPSymfonyForm = (function () {
       }
     });
   })
-})(jQuery);
+
+}(jQuery));

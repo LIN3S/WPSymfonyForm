@@ -9,24 +9,47 @@
  * file that was distributed with this source code.
  */
 
-namespace LIN3S\WPSymfonyForm;
+namespace LIN3S\WPSymfonyForm\Translation;
 
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 
 /**
- * Class Translator.
+ * Translator singleton class.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author Beñat Espiña <benatespina@gmail.com>
  */
 class Translator
 {
     /**
-     * @var Translator|null
+     * The instance.
+     *
+     * @var self
      */
-    private static $instance = null;
+    private static $instance;
 
-    private static function createTranslator()
+    /**
+     * The factory method that returns the
+     * instance of class in a singleton way.
+     *
+     * @return static
+     */
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Protected facade.
+     *
+     * @return Translator
+     */
+    protected function create()
     {
         $translator = new BaseTranslator(ICL_LANGUAGE_CODE);
         $translator->addLoader('xlf', new XliffFileLoader());
@@ -46,14 +69,9 @@ class Translator
     }
 
     /**
-     * @return \Symfony\Component\Translation\Translator
+     * This class cannot be instantiated.
      */
-    public static function getTranslator()
+    private function __construct()
     {
-        if (!self::$instance) {
-            self::$instance = self::createTranslator();
-        }
-
-        return self::$instance;
     }
 }

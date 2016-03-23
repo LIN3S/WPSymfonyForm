@@ -11,7 +11,6 @@
 
 namespace LIN3S\WPSymfonyForm\Action;
 
-use LIN3S\WPSymfonyForm\Action\Interfaces\ActionInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -19,29 +18,35 @@ use Symfony\Component\Form\FormInterface;
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
-class MailerAction implements ActionInterface
+class MailerAction implements Action
 {
     /**
-     * @var string
-     */
-    private $to;
-
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
+     * The email subject.
+     *
      * @var string
      */
     private $subject;
 
     /**
+     * The email HTML template.
+     *
+     * @var string
+     */
+    private $template;
+
+    /**
+     * The receiver email.
+     *
+     * @var string
+     */
+    private $to;
+
+    /**
      * Constructor.
      *
-     * @param string $to       Mail recipient
-     * @param string $template Twig template
-     * @param string $subject  Subject of the mail
+     * @param string $to       The receiver email
+     * @param string $template The email HTML template
+     * @param string $subject  The email subject
      */
     public function __construct($to, $template, $subject)
     {

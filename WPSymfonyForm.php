@@ -12,11 +12,11 @@
 new WPSymfonyForm();
 
 /**
- * Plugin WPSymfonyForm class.
+ * Plugin WPSymfonyForm entry point class.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
  */
-class WPSymfonyForm
+final class WPSymfonyForm
 {
     const VERSION = '0.2.0';
 
@@ -29,7 +29,7 @@ class WPSymfonyForm
     }
 
     /**
-     * Loads plugin
+     * Callback that allows to load the plugin.
      */
     public function loadPlugin()
     {
@@ -42,14 +42,14 @@ class WPSymfonyForm
 
         wp_enqueue_script(
             'wp-symfony-form',
-            plugin_dir_url( __FILE__ ) . '/src/LIN3S/WPSymfonyForm/Resources/js/wp-symfony-form.js',
+            plugin_dir_url(__FILE__) . '/src/LIN3S/WPSymfonyForm/Resources/js/wp-symfony-form.js',
             ['jquery'],
             self::VERSION,
             true
         );
 
         wp_localize_script('wp-symfony-form', 'WPSymfonyFormSettings', [
-            'ajaxUrl'      => admin_url('admin-ajax.php'),
+            'ajaxUrl' => admin_url('admin-ajax.php'),
         ]);
     }
 }

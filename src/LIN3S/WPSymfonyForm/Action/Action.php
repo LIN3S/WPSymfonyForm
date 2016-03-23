@@ -9,21 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace LIN3S\WPSymfonyForm\Action\Interfaces;
+namespace LIN3S\WPSymfonyForm\Action;
 
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Interface ActionInterface.
+ * Action interface.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author Beñat Espiña <benatespina@gmail.com>
  */
-interface ActionInterface
+interface Action
 {
     /**
-     * Action to be executed
+     * Action to be executed.
      *
-     * @param \Symfony\Component\Form\FormInterface $form
+     * @param FormInterface $form the form
      *
      * @return mixed
      */
