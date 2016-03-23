@@ -70,7 +70,7 @@ class FormWrapperRegistry
     public function get($formName)
     {
         foreach ($this->formWrappers as $wrapper) {
-            if ($wrapper->getForm()->getName() === $formName) {
+            if ($wrapper->getName() === $formName) {
                 return $wrapper;
             }
         }

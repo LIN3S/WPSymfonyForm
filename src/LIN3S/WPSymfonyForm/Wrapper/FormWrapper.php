@@ -28,6 +28,13 @@ class FormWrapper
     protected $formClass;
 
     /**
+     * The name of the form.
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
      * Array of actions.
      *
      * @var array
@@ -37,16 +44,18 @@ class FormWrapper
     /**
      * Generates a wrapper for a given form.
      *
+     * @param string   $name           The name of form
      * @param string   $formClass      Fqcn of form
      * @param Action[] $successActions Array of actions
      */
-    public function __construct($formClass, $successActions = [])
+    public function __construct($name, $formClass, $successActions = [])
     {
         $this->formClass = $formClass;
+        $this->name = $name;
         foreach ($successActions as $action) {
             if (!$action instanceof Action) {
                 throw new \InvalidArgumentException(
-                    'All actions passed to the FormWrapper must be an instance of ActionInterface'
+                    'All actions passed to the FormWrapper must be an instance of Action'
                 );
             }
         }
@@ -54,13 +63,23 @@ class FormWrapper
     }
 
     /**
-     * Returns a new instance of the Form.
+     * Gets the fully qualified class name of the form.
      *
-     * @return \Symfony\Component\Form\Form
+     * @return string
      */
     public function getForm()
     {
-        return new $this->formClass();
+        return $this->formClass;
+    }
+
+    /**
+     * Gets name of the form.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

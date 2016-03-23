@@ -38,7 +38,7 @@ class Translator
     public static function instance()
     {
         if (!self::$instance) {
-            self::$instance = new static();
+            self::$instance = static::create();
         }
 
         return self::$instance;
@@ -49,7 +49,7 @@ class Translator
      *
      * @return Translator
      */
-    protected function create()
+    protected static function create()
     {
         $translator = new BaseTranslator(ICL_LANGUAGE_CODE);
         $translator->addLoader('xlf', new XliffFileLoader());
