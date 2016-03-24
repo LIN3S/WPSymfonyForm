@@ -9,54 +9,55 @@
 [![Latest Stable Version](https://poser.pugx.org/lin3s/wp-symfony-form/v/stable.svg)](https://packagist.org/packages/lin3s/wp-symfony-form)
 [![Latest Unstable Version](https://poser.pugx.org/lin3s/wp-symfony-form/v/unstable.svg)](https://packagist.org/packages/lin3s/wp-symfony-form)
  
-##Installation
-
+## Installation
 If you are using composer run the following command:
-
 ```bash
 $ composer require lin3s/wp-symfony-form
 ```
 
-If your composer.json is properly set up you should find this package in plugins folder
+If your `composer.json` is properly set up you should find this package in plugins folder
 
-##Usage
-
-First of all, enable this plugin in the WordPress admin panel.
+## Usage
+First of all, **enable this plugin in the WordPress admin panel**.
 
 To create your first form extend as usual from the `AbstractType` class provided by Symfony component.
-
 ```php
-class ContactForm extends AbstractType
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints;
+
+class ContactType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
-                    'constraints' => new Assert\NotBlank(),
-                    'label' => Translations::trans('Name and surname')
-                ])
-                ->add('email', 'email', [
-                    'constraints' => new Assert\Email(),
-                    'label' => Translations::trans('Email')
-                ])
-                ->add('phone', 'text', [
-                    'constraints' => new Assert\NotBlank(),
-                    'label' => Translations::trans('Phone')
-                ])
-                ->add('message', 'textarea', [
-                    'constraints' => new Assert\NotBlank(),
-                    'label' => Translations::trans('Your message')
-                ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'contact';
+        $builder
+            ->add('name', TextType::class, [
+                'constraints' => new Constraints\NotBlank(),
+                'label'       => 'Name',
+            ])
+            ->add('surname', TextType::class, [
+                'constraints' => new Constraints\NotBlank(),
+                'label'       => 'Surname',
+            ])
+            ->add('phone', TextType::class, [
+                'constraints' => new Constraints\NotBlank(),
+                'label'       => 'Phone',
+            ])
+            ->add('email', EmailType::class, [
+                'constraints' => new Constraints\Email(),
+                'label'       => 'Email',
+            ])
+            ->add('message', TextareaType::class, [
+                'constraints' => new Constraints\NotBlank(),
+                'label'       => 'Message',
+            ])
+            ->add('conditions', CheckboxType::class, [
+                'mapped' => false,
+            ]);
     }
 }
 ``` 
@@ -75,6 +76,10 @@ add_filter('wp_symfony_form_wrappers', function($formWrappers) {
 ###Rendering the form
 In case you want to use Twig for rendering a Bridge is provided, just run the following code line passing Twig instance
 ```php
+
+TwigBridge::addExtension($twig);
+
+// if you want to customize the form theme
 TwigBridge::addExtension($twig, 'component/form.twig');
 ```
 
@@ -97,21 +102,21 @@ created for each form you want to use in your WordPress project, and need to be 
 `FormWrapperRegistry`.
 
 As first parameter it receives the fully qualified namespace and as second parameter it receives an array of classes
-implementing `ActionInterface`.
+implementing `Action` interface.
 
 ###Actions on success
-In case you need to perform any **server side** actions, it's as easy as to extend `ActionInterface` and to implement `execute()`
-method. A form instance will to be used as desired. Check `src/Action` folder to check already implemented actions.
+In case you need to perform any **server side** actions, it's as easy as to implement `execute` method of `Action` interface.
+A form instance will to be used as desired. Check `src/Action` folder to check already implemented actions.
 
 To bind this action to a specific form you need to add it in the `FormWrapper`.
 
 For **client side** success actions you can add your callback using the global `WPSymfonyForm` namespace as follows:
 ```js
     WPSymfonyForm.onSuccess(function ($form) {
-        if ($form.hasClass('form--contact')) {
-          // ANYTHING YOU WANT TO DO 
-        }
-        $form.find('.form__footer').html('<p>Form successfully submitted</p>');
-      });
+      if ($form.hasClass('form--contact')) {
+        // ANYTHING YOU WANT TO DO 
+      }
+      $form.find('.form__footer').html('<p>Form successfully submitted</p>');
+    });
 ```
 > `onSuccess()` and `onError()` are available to hook into the form.

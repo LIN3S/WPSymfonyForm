@@ -11,18 +11,30 @@
  */
 
 var WPSymfonyForm = (function () {
-  var successCallbacks = [],
+  var
+    sendingCallbacks = [],
+    successCallbacks = [],
     errorCallbacks = [];
 
   return {
     formSelector: '.form',
     formErrorsSelector: '.form__errors',
+    onSending: function (callback) {
+      sendingCallbacks.push(callback);
+    },
+
     onSuccess: function (callback) {
       successCallbacks.push(callback);
     },
 
     onError: function (callback) {
       errorCallbacks.push(callback);
+    },
+
+    triggerSendingCallbacks: function ($form) {
+      sendingCallbacks.forEach(function (callback) {
+        callback($form);
+      });
     },
 
     triggerSuccessCallbacks: function ($form) {
@@ -44,9 +56,9 @@ var WPSymfonyForm = (function () {
   $(WPSymfonyForm.formSelector).submit(function (event) {
     var $form = $(event.currentTarget);
 
-    event.prevententDefault();
+    event.preventDefault();
 
-    $form.find('[type="submit"]').hide();
+    WPSymfonyForm.triggerSendingCallbacks($form);
 
     $.ajax({
       type: 'POST',
@@ -56,12 +68,12 @@ var WPSymfonyForm = (function () {
       success: function () {
         $form.find(WPSymfonyForm.formErrorsSelector).text('');
         WPSymfonyForm.triggerSuccessCallbacks($form);
+        $form.get(0).reset();
       },
       error: function (data) {
-        $form.find('[type="submit"]').show();
-        $form.find(WPSymfonyForm.formErrorsSelector).text('');
-
         var json = JSON.parse(data.responseText);
+
+        $form.find(WPSymfonyForm.formErrorsSelector).text('');
         for (var key in json) {
           $form.find('[name*="[' + key + ']"]')
             .siblings(WPSymfonyForm.formErrorsSelector).text(json[key]);
