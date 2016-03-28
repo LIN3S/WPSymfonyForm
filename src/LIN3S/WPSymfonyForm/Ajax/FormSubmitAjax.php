@@ -56,7 +56,7 @@ class FormSubmitAjax
             $formWrapper = $this->formWrapperRegistry->get($formType);
             echo(new AjaxController())->ajaxAction($formWrapper);
             die();
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $exception) {
             echo json_encode(['errors' => ['unknown form_type']]);
             http_response_code(400);
             die();

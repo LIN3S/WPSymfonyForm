@@ -30,32 +30,13 @@ class FormWrapperRegistry
     /**
      * Initializes the registry with an array of wrappers.
      *
-     * @param FormWrapper[] $formWrappers
-     *
-     * @throws \InvalidArgumentException
+     * @param FormWrapper[] $formWrappers The form wrappers collection
      */
-    public function __construct($formWrappers = [])
+    public function __construct(array $formWrappers = [])
     {
-        if (is_array($formWrappers)) {
-            foreach ($formWrappers as $wrapper) {
-                if (!$wrapper instanceof FormWrapper) {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'FormWrapperRegistry requires an array of FormWrapper objects, %s given',
-                            get_class($wrapper)
-                        )
-                    );
-                }
-            }
-            $this->formWrappers = $formWrappers;
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'FormWrapperRegistry requires an array of FormWrapper objects, %s given',
-                    get_class($formWrappers)
-                )
-            );
-        }
+        $this->formWrappers = array_map(function (FormWrapper $formWrapper) {
+            return $formWrapper;
+        }, $formWrappers);
     }
 
     /**
@@ -65,7 +46,7 @@ class FormWrapperRegistry
      *
      * @throw \InvalidArgumentException if wrapper not found
      *
-     * @return \LIN3S\WPSymfonyForm\Wrapper\FormWrapper
+     * @return FormWrapper
      */
     public function get($formName)
     {

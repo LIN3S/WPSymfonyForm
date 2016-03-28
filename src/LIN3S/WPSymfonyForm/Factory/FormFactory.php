@@ -39,7 +39,7 @@ final class FormFactory
      *
      * @return FormFactoryBuilder
      */
-    public static function getBuilder()
+    private static function getBuilder()
     {
         $builder = new FormFactoryBuilder();
         $builder->addExtension(new CoreExtension());
@@ -48,12 +48,5 @@ final class FormFactory
         $builder->addExtension(new ValidatorExtension($validatorBuilder->getValidator()));
 
         return $builder;
-    }
-
-    /**
-     * This class cannot be instantiated.
-     */
-    private function __construct()
-    {
     }
 }

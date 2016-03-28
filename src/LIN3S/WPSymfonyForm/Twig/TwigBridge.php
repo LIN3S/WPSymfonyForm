@@ -25,12 +25,12 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 class TwigBridge
 {
     /**
-     * @param mixed  $twig      The twig
-     * @param string $formTheme The form theme
+     * @param \Twig_Environment $twig      The twig
+     * @param string            $formTheme The form theme
      *
      * @return mixed
      */
-    public static function addExtension($twig, $formTheme = 'form_div_layout.html.twig')
+    public static function addExtension(\Twig_Environment $twig, $formTheme = 'form_div_layout.html.twig')
     {
         $formEngine = new TwigRendererEngine([$formTheme]);
         $twig->addExtension(

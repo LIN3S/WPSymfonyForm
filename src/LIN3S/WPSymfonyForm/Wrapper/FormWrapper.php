@@ -35,9 +35,9 @@ class FormWrapper
     protected $name;
 
     /**
-     * Array of actions.
+     * Collection of actions.
      *
-     * @var array
+     * @var Action[]
      */
     protected $successActions;
 
@@ -46,9 +46,9 @@ class FormWrapper
      *
      * @param string   $name           The name of form
      * @param string   $formClass      Fqcn of form
-     * @param Action[] $successActions Array of actions
+     * @param Action[] $successActions Collection of actions
      */
-    public function __construct($name, $formClass, $successActions = [])
+    public function __construct($name, $formClass, array $successActions = [])
     {
         $this->formClass = $formClass;
         $this->name = $name;
