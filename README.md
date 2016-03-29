@@ -63,12 +63,14 @@ class ContactType extends AbstractType
 ``` 
 
 To enable the Ajax calls for this form you need to subscribe to the `wp_symfony_form_wrappers` WordPress hook.
-
 ```php
 add_filter('wp_symfony_form_wrappers', function($formWrappers) {
-    $formWrappers->add(new FormWrapper(
-        'Fully/Qualified/Namespace/ContactForm'
-    ));
+    $formWrappers->add(
+        new FormWrapper(
+            'contact',
+            'Fully/Qualified/Namespace/ContactType'
+        )
+    );
 });
 ```
 
