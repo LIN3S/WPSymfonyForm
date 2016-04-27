@@ -59,7 +59,7 @@ class AjaxController
     {
         $errors = [];
         foreach ($form->getErrors() as $error) {
-            $errors[] = Translator::instance()->trans($error->getMessage(), [], 'validators');
+            $errors[] = Translator::instance()->trans($error->getMessageTemplate(), $error->getMessageParameters(), 'validators');
         }
         foreach ($form->all() as $child) {
             if (!$child->isValid()) {
