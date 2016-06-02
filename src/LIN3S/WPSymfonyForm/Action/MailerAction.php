@@ -60,11 +60,16 @@ class MailerAction implements Action
      */
     public function execute(FormInterface $form)
     {
+        if (!class_exists('\Timber\Timber')) {
+            $message = \Timber\Timber::compile($this->template, ['request' => $form->getData()]);
+        }
         if (!class_exists('\Timber')) {
-            throw new \InvalidArgumentException('Timber plugin is required to use MailerAction');
+            $message = \Timber::compile($this->template, ['request' => $form->getData()]);
+        }
+        if (!isset($message)) {
+            throw new \InvalidArgumentException('Timber is required to use MailerAction');
         }
 
-        $message = \Timber::compile($this->template, ['request' => $form->getData()]);
 
         wp_mail($this->to, $this->subject, $message, [
             'Content-Type: text/html; charset=UTF-8',

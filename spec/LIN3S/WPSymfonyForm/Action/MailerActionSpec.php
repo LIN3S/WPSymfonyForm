@@ -37,9 +37,4 @@ class MailerActionSpec extends ObjectBehavior
     {
         $this->shouldImplement(Action::class);
     }
-
-    function it_does_not_execute_because_timber_does_not_found(FormInterface $form)
-    {
-        $this->shouldThrow(\InvalidArgumentException::class)->duringExecute($form);
-    }
 }
