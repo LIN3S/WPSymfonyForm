@@ -11,6 +11,7 @@
 
 namespace LIN3S\WPSymfonyForm\Translation;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 
@@ -51,16 +52,24 @@ class Translator
      */
     protected static function create()
     {
-        $translator = new BaseTranslator(ICL_LANGUAGE_CODE);
+        $locale = 'es_ES';
+        if (defined('ICL_LANGUAGE_CODE')) {
+            $locale = ICL_LANGUAGE_CODE;
+        }
+
+        $translator = new BaseTranslator($locale);
         $translator->addLoader('xlf', new XliffFileLoader());
 
-        $languages = ['en', 'es', 'eu'];
+        $finder = new Finder();
+        $finder->files()->in(ABSPATH . '/../vendor/symfony/validator/Resources/translations/');
+        foreach ($finder as $validator) {
+            $locale = str_replace('validators.', '', $validator->getRelativePathName());
+            $locale = str_replace('.xlf', '', $locale);
 
-        foreach ($languages as $language) {
             $translator->addResource(
                 'xlf',
-                ABSPATH . '/../vendor/symfony/validator/Resources/translations/validators.' . $language . '.xlf',
-                $language,
+                $validator->getRealpath(),
+                $locale,
                 'validators'
             );
         }
