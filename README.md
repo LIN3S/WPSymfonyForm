@@ -84,12 +84,19 @@ TwigBridge::addExtension($twig);
 // if you want to customize the form theme
 TwigBridge::addExtension($twig, 'component/form.twig');
 ```
-
 > `component/form.twig` is your custom form theme that will be used to render the forms. Check the docs about 
 [form customization](http://symfony.com/doc/current/cookbook/form/form_customization.html#what-are-form-themes) for
 further info.
 
-> In case you are using Timber you should use `twig_apply_filters` hook.
+**Timber**
+In case you are using Timber you should use `twig_apply_filters` hook.</br>
+Also, you have to load the form base views inside *Timber* global locations variable:
+```php
+\Timber\Timber::$locations = [
+    (...)
+    ABSPATH . '../vendor/symfony/twig-bridge/Resources/views/Form/',
+];
+```
 
 **Important** Submit event is binded to every element with `.form` class. In case you need to change it just do the following:
 ```js
