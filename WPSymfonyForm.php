@@ -3,9 +3,9 @@
 /*
  * Plugin Name: WP Symfony Form
  * Plugin URI: http://lin3s.com
- * Description: Allows using forms the Symfony way
+ * Description: WordPress plugin to allow using Symfony form component with ease
  * Author: LIN3S
- * Version: 0.2.0
+ * Version: 0.4.0
  * Author URI: http://lin3s.com/
  */
 
@@ -18,7 +18,7 @@ new WPSymfonyForm();
  */
 final class WPSymfonyForm
 {
-    const VERSION = '0.3.1';
+    const VERSION = '0.4.0';
 
     /**
      * Construtor.
