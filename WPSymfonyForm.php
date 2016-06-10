@@ -53,6 +53,6 @@ final class WPSymfonyForm
             'ajaxUrl' => admin_url('admin-ajax.php'),
         ]);
 
-        \LIN3S\WPSymfonyForm\Admin\Admin::instance();
+        new \LIN3S\WPSymfonyForm\Admin\Admin($registry);
     }
 }

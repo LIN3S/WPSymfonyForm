@@ -23,11 +23,19 @@ class LogsTable extends \WP_List_Table
     private $storage;
 
     /**
+     * The form type name.
+     *
+     * @var string
+     */
+    private $formType;
+
+    /**
      * Constructor.
      *
-     * @param Storage $storage The storage
+     * @param string  $formType The form type name
+     * @param Storage $storage  The storage
      */
-    public function __construct(Storage $storage)
+    public function __construct($formType, Storage $storage)
     {
         parent::__construct([
             'singular' => __('Log', \WPSymfonyForm::TRANSLATION_DOMAIN),
@@ -35,6 +43,7 @@ class LogsTable extends \WP_List_Table
             'ajax'     => false,
         ]);
 
+        $this->formType = $formType;
         $this->storage = $storage;
         add_action('admin_head', [$this, 'header']);
     }
@@ -88,14 +97,13 @@ class LogsTable extends \WP_List_Table
 
         $limit = $this->get_items_per_page('logs_per_page', 10);
         $offset = $this->get_pagenum();
-        $total = $this->storage->size();
+        $this->items = $this->storage->query(['formType' => $this->formType], $limit, $offset);
+        $total = count($this->items);
 
         $this->set_pagination_args([
             'total_items' => $total,
             'per_page'    => $limit,
         ]);
-
-        $this->items = $this->storage->get($limit, $offset);
     }
 
     /**

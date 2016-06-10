@@ -5,11 +5,11 @@ namespace LIN3S\WPSymfonyForm\Admin\Storage;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * YAML strategy of storage.
+ * In memory strategy of storage.
  *
  * @author Beñat Espiña <benatespina@gmail.com>
  */
-class YamlStorage implements Storage
+class InMemoryStorage implements Storage
 {
     /**
      * The data collection.
@@ -21,14 +21,11 @@ class YamlStorage implements Storage
     /**
      * Constructor.
      *
-     * @param string $yamlFile The dir path of YAML file
+     * @param mixed $data The data
      */
-    public function __construct($yamlFile = null)
+    public function __construct($data)
     {
-        if (null === $yamlFile) {
-            $yamlFile = __DIR__ . '/../../../../../../../../wp_symfony_form_email_log.yml';
-        }
-        $this->data = Yaml::parse(file_get_contents($yamlFile));
+        $this->data = $data;
     }
 
     /**
@@ -75,7 +72,11 @@ class YamlStorage implements Storage
      */
     public function properties()
     {
-        return array_keys($this->data[0]);
+        if (is_array($this->data[0])) {
+            return array_keys($this->data[0]);
+        }
+
+        return array_keys($this->data);
     }
 
     /**

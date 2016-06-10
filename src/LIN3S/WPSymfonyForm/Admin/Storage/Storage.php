@@ -10,24 +10,35 @@ namespace LIN3S\WPSymfonyForm\Admin\Storage;
 interface Storage
 {
     /**
-     * Retrieves the logs data using the given pagination options.
+     * Retrieves the data data using the given pagination options.
      *
      * @param int $limit  The logs per page
      * @param int $offset The page number
      *
      * @return mixed
      */
-    public function get($limit, $offset);
+    public function findAll($limit, $offset);
 
     /**
-     * Gets the properties that contain each log.
+     * Retrieves the data of given criteria using the given pagination options.
+     *
+     * @param array $criteria The filter criteria
+     * @param int   $limit    The logs per page
+     * @param int   $offset   The page number
+     *
+     * @return mixed
+     */
+    public function query(array $criteria, $limit, $offset);
+
+    /**
+     * Gets the properties that contain each data.
      *
      * @return array
      */
     public function properties();
 
     /**
-     * Counts the logs.
+     * Counts the data.
      *
      * @return int
      */

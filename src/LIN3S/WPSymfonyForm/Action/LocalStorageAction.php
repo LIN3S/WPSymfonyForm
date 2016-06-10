@@ -47,7 +47,10 @@ class LocalStorageAction implements Action
     public function execute(FormInterface $form)
     {
         $existentData = Yaml::parse(file_get_contents($this->yamlFile));
-        $newData = ['date' => (new \DateTimeImmutable())->format('Y-m-d - h:m')];
+        $newData = [
+            'formType' => $form->getName(),
+            'date'     => (new \DateTimeImmutable())->format('Y-m-d - h:m'),
+        ];
         $newData = array_merge($newData, $form->getData());
 
         $data = null !== $existentData ? array_merge($existentData, [$newData]) : [$newData];

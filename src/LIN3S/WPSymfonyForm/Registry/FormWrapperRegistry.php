@@ -17,6 +17,7 @@ use LIN3S\WPSymfonyForm\Wrapper\FormWrapper;
  * FormWrapperRegistry class.
  *
  * @author Gorka Laucirica <gorka.lauzirika@gmail.com>
+ * @author Beñat Espiña <benatespina@gmail.com>
  */
 class FormWrapperRegistry
 {
@@ -40,16 +41,21 @@ class FormWrapperRegistry
     }
 
     /**
-     * Gets a form wrapper by form name.
+     * Gets a form wrapper by form name, if the given form
+     * name is null returns all the form wrappers.
      *
-     * @param string $formName The form name
+     * @param string|null $formName The form name
      *
      * @throw \InvalidArgumentException if wrapper not found
      *
-     * @return FormWrapper
+     * @return FormWrapper[]|FormWrapper
      */
-    public function get($formName)
+    public function get($formName = null)
     {
+        if (null === $formName) {
+            return $this->formWrappers;
+        }
+
         foreach ($this->formWrappers as $wrapper) {
             if ($wrapper->getName() === $formName) {
                 return $wrapper;
