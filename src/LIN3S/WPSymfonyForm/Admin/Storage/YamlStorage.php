@@ -29,6 +29,9 @@ class YamlStorage implements Storage
             $yamlFile = __DIR__ . '/../../../../../../../../wp_symfony_form_email_log.yml';
         }
         $this->data = Yaml::parse(file_get_contents($yamlFile));
+        if (null === $this->data) {
+            $this->data = [];
+        }
     }
 
     /**
@@ -75,7 +78,7 @@ class YamlStorage implements Storage
      */
     public function properties()
     {
-        return array_keys($this->data[0]);
+        return isset($this->data[0]) ? array_keys($this->data[0]) : null;
     }
 
     /**

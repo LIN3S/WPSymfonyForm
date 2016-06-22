@@ -3,9 +3,12 @@
 namespace LIN3S\WPSymfonyForm\Admin;
 
 use LIN3S\WPSymfonyForm\Admin\Storage\InMemoryStorage;
+use LIN3S\WPSymfonyForm\Admin\Storage\Storage;
 use LIN3S\WPSymfonyForm\Admin\Storage\YamlStorage;
-use LIN3S\WPSymfonyForm\Admin\Views\FormsTable;
-use LIN3S\WPSymfonyForm\Admin\Views\LogsTable;
+use LIN3S\WPSymfonyForm\Admin\Views\Form;
+use LIN3S\WPSymfonyForm\Admin\Views\Components\FormsTable;
+use LIN3S\WPSymfonyForm\Admin\Views\Components\LogsTable;
+use LIN3S\WPSymfonyForm\Admin\Views\General;
 use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
 
 /**
@@ -15,13 +18,6 @@ use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
  */
 class Admin
 {
-    /**
-     * The forms table.
-     *
-     * @var FormsTable
-     */
-    private $formsTable;
-
     /**
      * The logs table.
      *
@@ -44,12 +40,20 @@ class Admin
     private $forms;
 
     /**
+     * The storage strategy.
+     *
+     * @var Storage
+     */
+    private $storage;
+
+    /**
      * Constructor.
      *
      * @param FormWrapperRegistry $formWrapperRegistry The form wrapper registry
      */
     public function __construct(FormWrapperRegistry $formWrapperRegistry)
     {
+        $this->storage = new YamlStorage(); // TODO: This is hardcoded for now
         $this->formWrapperRegistry = $formWrapperRegistry;
         $this->forms = [];
         add_filter('set-screen-option', function ($status, $option, $value) {
@@ -64,135 +68,65 @@ class Admin
      */
     public function menu()
     {
+        $view = new General(
+            new FormsTable(
+                new InMemoryStorage(
+                    $this->forms()
+                )
+            )
+        );
+
         $menu = add_menu_page(
             'Symfony Forms',
             'Symfony Forms',
             'manage_options',
             'symfony-form',
-            [$this, 'generalPage']
+            [$view, 'display']
         );
-        add_action("load-$menu", [$this, 'generalPageScreenOptions']);
+        add_action("load-$menu", [$view, 'screenOptions']);
+
+
+        add_submenu_page(
+            'symfony-form',
+            __('General', \WPSymfonyForm::TRANSLATION_DOMAIN),
+            __('General', \WPSymfonyForm::TRANSLATION_DOMAIN),
+            'manage_options',
+            'symfony-form'
+        );
+        foreach ($this->formWrapperRegistry->get() as $key => $formWrapper) {
+            $slug = 'wp-symfony-form-' . preg_replace('/\s+/', '', strtolower($formWrapper->getName()));
+            $name = ucfirst($formWrapper->getName());
+            $view = new Form(
+                $name,
+                new LogsTable(
+                    $formWrapper->getName(),
+                    $this->storage
+                )
+            );
+
+            $subMenu = add_submenu_page('symfony-form', $name, $name, 'manage_options', $slug, function () use ($view) {
+                $view->display();
+            });
+            add_action("load-$subMenu", [$view, 'screenOptions']);
+        }
+    }
+
+    public function forms()
+    {
+        if (!empty($this->forms)) {
+            return $this->forms;
+        }
 
         foreach ($this->formWrapperRegistry->get() as $key => $formWrapper) {
-            $name = ucfirst($formWrapper->getName());
             $slug = 'wp-symfony-form-' . preg_replace('/\s+/', '', strtolower($formWrapper->getName()));
-
-            $subMenu = add_submenu_page(
-                'symfony-form',
-                $name,
-                $name,
-                'manage_options',
-                $slug,
-                [$this, 'logArchivePage']
-            );
+            $name = ucfirst($formWrapper->getName());
 
             $this->forms[] = [
                 'name' => $name,
                 'link' => '<a href="?page=' . $slug . '">/wp-admin/admin.php?page=' . $slug . '</a>',
             ];
-
-//            do_action('wp-symfony-form-load-'. $subMenu, ['name' => $name]);
-//            add_action('wp-symfony-form-load-'. $subMenu, [$this, 'logArchivePageScreenOptions']);
-
-//            add_action('wp-symfony-form-load-' . $subMenu, function () use ($name) {
-//                add_screen_option('per_page', [
-//                    'label'   => 'Logs',
-//                    'default' => 10,
-//                    'option'  => 'logs_per_page',
-//                ]);
-//
-//                $this->logsTable = new LogsTable(
-//                    $name,
-//                    new YamlStorage()
-//                );
-//            });
         }
-    }
 
-    /**
-     * Adds main form archive page screen options.
-     */
-    public function generalPageScreenOptions()
-    {
-        add_screen_option('per_page', [
-            'label'   => 'Forms',
-            'default' => 10,
-            'option'  => 'forms_per_page',
-        ]);
-
-        $this->formsTable = new FormsTable(
-            new InMemoryStorage(
-                $this->forms
-            )
-        );
-    }
-
-//    /**
-//     * Adds email log archive page screen options.
-//     */
-//    public function logArchivePageScreenOptions()
-//    {
-//        add_screen_option('per_page', [
-//            'label'   => 'Logs',
-//            'default' => 10,
-//            'option'  => 'logs_per_page',
-//        ]);
-//
-//        $this->logsTable = new LogsTable(
-//            $
-//            new YamlStorage()
-//        );
-//    }
-
-    /**
-     * Renders main form archive page.
-     */
-    public function generalPage()
-    {
-        ?>
-        <div class="wrap">
-            <h2><?php _e('General', \WPSymfonyForm::TRANSLATION_DOMAIN); ?></h2>
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post">
-                                <?php
-                                $this->formsTable->prepare_items();
-                                $this->formsTable->display(); ?>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
-     * Renders log archive page.
-     */
-    public function logArchivePage()
-    {
-        ?>
-        <div class="wrap">
-            <h2><?php _e('Sent emails logs', \WPSymfonyForm::TRANSLATION_DOMAIN); ?></h2>
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post">
-                                <?php
-                                $this->logsTable->prepare_items();
-                                $this->logsTable->display(); ?>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-        </div>
-        <?php
+        return $this->forms;
     }
 }

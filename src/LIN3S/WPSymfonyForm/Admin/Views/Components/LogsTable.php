@@ -1,6 +1,6 @@
 <?php
 
-namespace LIN3S\WPSymfonyForm\Admin\Views;
+namespace LIN3S\WPSymfonyForm\Admin\Views\Components;
 
 use LIN3S\WPSymfonyForm\Admin\Storage\Storage;
 
@@ -45,7 +45,6 @@ class LogsTable extends \WP_List_Table
 
         $this->formType = $formType;
         $this->storage = $storage;
-        add_action('admin_head', [$this, 'header']);
     }
 
     /**
@@ -69,8 +68,14 @@ class LogsTable extends \WP_List_Table
      */
     public function get_columns()
     {
+        if (null === $properties = $this->storage->properties()) {
+            return [];
+        }
         $columns = [];
         foreach ($this->storage->properties() as $property) {
+            if ($property === 'formType') {
+                continue;
+            }
             $columns[$property] = __(ucfirst($property), \WPSymfonyForm::TRANSLATION_DOMAIN);
         }
 
@@ -98,37 +103,34 @@ class LogsTable extends \WP_List_Table
         $limit = $this->get_items_per_page('logs_per_page', 10);
         $offset = $this->get_pagenum();
         $this->items = $this->storage->query(['formType' => $this->formType], $limit, $offset);
-        $total = count($this->items);
 
         $this->set_pagination_args([
-            'total_items' => $total,
+            'total_items' => $this->storage->size(),
             'per_page'    => $limit,
         ]);
     }
 
     /**
-     * Callback that customize the header of the table.
+     * {@inheritdoc}
      */
-    public function header()
+    public function display()
     {
-        echo <<<EOL
-<style type="text/css">
-    .wp-list-table .column-date {
-        width: 15%;
-    }
-
-    .wp-list-table .column-email {
-        width: 15%;
-    }
-
-    .wp-list-table .column-comment {
-        width: 30%;
-    }
-    
-    .wp-list-table .column-message {
-        width: 30%;
-    }
-</style>
-EOL;
+        ?>
+        <div class="meta-box-sortables ui-sortable">
+            <form action="" method="get">
+                <?php
+                $this->search_box(__('Search', \WPSymfonyForm::TRANSLATION_DOMAIN), 'search-id');
+                foreach ($_GET as $key => $value) {
+                    if ('s' !== $key) {
+                        echo("<input type='hidden' name='$key' value='$value' />");
+                    }
+                }
+                ?>
+            </form>
+            <form method="post">
+                <?php parent::display(); ?>
+            </form>
+        </div>
+        <?php
     }
 }
