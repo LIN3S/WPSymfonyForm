@@ -9,23 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace LIN3S\WPSymfonyForm\Admin\Views;
+namespace LIN3S\WPSymfonyForm\Admin\Views\Components;
 
 /**
- * Page base interface.
+ * Component base interface.
  *
  * @author Beñat Espiña <benatespina@gmail.com>
  */
-interface Page
+interface Component
 {
     /**
-     * Renders the page.
+     * Gets the instance of WP list table component.
+     *
+     * @return \WP_List_Table
      */
-    public function display();
-
-    /**
-     * Method that allows use "add_screen_option" WordPress hook
-     * to add custom screen options inside current page.
-     */
-    public function screenOptions();
+    public function load();
 }

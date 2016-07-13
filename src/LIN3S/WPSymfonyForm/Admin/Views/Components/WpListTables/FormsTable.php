@@ -1,11 +1,11 @@
 <?php
 
-namespace LIN3S\WPSymfonyForm\Admin\Views;
+namespace LIN3S\WPSymfonyForm\Admin\Views\Components\WpListTables;
 
 use LIN3S\WPSymfonyForm\Admin\Storage\Storage;
 
 if (!class_exists('WP_List_Table')) {
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
+    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
@@ -87,6 +87,7 @@ class FormsTable extends \WP_List_Table
      */
     public function prepare_items()
     {
+        $this->_column_headers = [$this->get_columns(), [], $this->get_sortable_columns()];
         $this->_column_headers = $this->get_column_info();
 
         $limit = $this->get_items_per_page('forms_per_page', 10);
@@ -98,5 +99,20 @@ class FormsTable extends \WP_List_Table
             'total_items' => $total,
             'per_page'    => $limit,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function display()
+    {
+        ?>
+        <div class="meta-box-sortables ui-sortable">
+            <form method="post">
+                <?php parent::display(); ?>
+            </form>
+        </div>
+        <?php
+
     }
 }

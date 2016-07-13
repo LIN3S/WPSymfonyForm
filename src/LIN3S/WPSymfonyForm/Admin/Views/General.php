@@ -33,21 +33,21 @@ class General implements Page
      */
     public function display()
     {
-        $this->formsTable->prepare_items();
-
-        ?>
+        $wpFormTable = $this->formsTable->load();
+        $wpFormTable->prepare_items(); ?>
         <div class="wrap">
             <h2><?php _e('General', \WPSymfonyForm::TRANSLATION_DOMAIN); ?></h2>
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder">
                     <div id="post-body-content">
-                        <?php $this->formsTable->display(); ?>
+                        <?php $wpFormTable->display(); ?>
                     </div>
                 </div>
                 <br class="clear">
             </div>
         </div>
         <?php
+
     }
 
     /**

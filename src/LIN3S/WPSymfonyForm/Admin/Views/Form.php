@@ -42,9 +42,8 @@ class Form implements Page
      */
     public function display()
     {
-        $this->logsTable->prepare_items();
-
-        ?>
+        $wpLogsTable = $this->logsTable->load();
+        $wpLogsTable->prepare_items(); ?>
         <div class="wrap">
             <h2>
                 <?php _e('Sent emails logs of ', \WPSymfonyForm::TRANSLATION_DOMAIN); ?>
@@ -54,13 +53,14 @@ class Form implements Page
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder">
                     <div id="post-body-content">
-                        <?php $this->logsTable->display() ?>
+                        <?php $wpLogsTable->display() ?>
                     </div>
                 </div>
                 <br class="clear">
             </div>
         </div>
         <?php
+
     }
 
     /**
