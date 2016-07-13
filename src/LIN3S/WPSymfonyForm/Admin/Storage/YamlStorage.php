@@ -30,14 +30,25 @@ class YamlStorage implements Storage
     /**
      * Constructor.
      *
-     * @param string $yamlFile The dir path of YAML file
+     * @param string|null $formType The form type
+     * @param string|null $yamlFile The dir path of YAML file
      */
-    public function __construct($yamlFile = null)
+    public function __construct($formType = null, $yamlFile = null)
     {
         if (null === $yamlFile) {
             $yamlFile = __DIR__ . '/../../../../../../../../wp_symfony_form_email_log.yml';
         }
-        $this->data = Yaml::parse(file_get_contents($yamlFile));
+        $data = Yaml::parse(file_get_contents($yamlFile));
+        if (null === $formType) {
+            $this->data = $data;
+        } else {
+            foreach ($data as $item) {
+                if ($item['formType'] === $formType) {
+                    $this->data[] = $item;
+                }
+            }
+        }
+
         if (null === $this->data) {
             $this->data = [];
         }

@@ -133,7 +133,7 @@ class Admin
     {
         foreach ($formWrapper->getSuccessActions() as $action) {
             if ($action instanceof LocalStorageAction) {
-                return new YamlStorage();
+                return new YamlStorage($formWrapper->getName());
             }
         }
 
