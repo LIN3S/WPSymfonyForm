@@ -61,6 +61,7 @@ class Admin
         }, 10, 3);
 
         add_action('admin_menu', [$this, 'menu']);
+        add_action('admin_menu', [$this, 'subMenu']);
     }
 
     /**
@@ -85,7 +86,6 @@ class Admin
         );
         add_action("load-$menu", [$view, 'screenOptions']);
 
-
         add_submenu_page(
             'symfony-form',
             __('General', \WPSymfonyForm::TRANSLATION_DOMAIN),
@@ -93,6 +93,13 @@ class Admin
             'manage_options',
             'symfony-form'
         );
+    }
+
+    /**
+     * Loads the form sub menus inside WordPress admin sidebar.
+     */
+    public function subMenu()
+    {
         foreach ($this->formWrapperRegistry->get() as $key => $formWrapper) {
             $slug = 'wp-symfony-form-' . preg_replace('/\s+/', '', strtolower($formWrapper->getName()));
             $name = ucfirst($formWrapper->getName());
@@ -104,14 +111,24 @@ class Admin
                 )
             );
 
-            $subMenu = add_submenu_page('symfony-form', $name, $name, 'manage_options', $slug, function () use ($view) {
-                $view->display();
-            });
+            $subMenu = add_submenu_page(
+                'symfony-form',
+                $name,
+                $name,
+                'manage_options',
+                $slug,
+                [$view, 'display']
+            );
             add_action("load-$subMenu", [$view, 'screenOptions']);
         }
     }
 
-    public function forms()
+    /**
+     * Populates the forms with its name and its link, returning the built array.
+     *
+     * @return array
+     */
+    private function forms()
     {
         if (!empty($this->forms)) {
             return $this->forms;
