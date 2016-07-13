@@ -11,6 +11,8 @@
 
 namespace LIN3S\WPSymfonyForm\Admin;
 
+use LIN3S\WPSymfonyForm\Action\ActionNotFoundException;
+use LIN3S\WPSymfonyForm\Action\LocalStorageAction;
 use LIN3S\WPSymfonyForm\Admin\Storage\InMemoryStorage;
 use LIN3S\WPSymfonyForm\Admin\Storage\Storage;
 use LIN3S\WPSymfonyForm\Admin\Storage\YamlStorage;
@@ -19,6 +21,7 @@ use LIN3S\WPSymfonyForm\Admin\Views\Components\LogsTable;
 use LIN3S\WPSymfonyForm\Admin\Views\Form;
 use LIN3S\WPSymfonyForm\Admin\Views\General;
 use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
+use LIN3S\WPSymfonyForm\Wrapper\FormWrapper;
 
 /**
  * Main admin class.
@@ -27,13 +30,6 @@ use LIN3S\WPSymfonyForm\Registry\FormWrapperRegistry;
  */
 class Admin
 {
-    /**
-     * The logs table.
-     *
-     * @var LogsTable
-     */
-    public $logsTable;
-
     /**
      * The form wrapper registry.
      *
@@ -49,20 +45,12 @@ class Admin
     private $forms;
 
     /**
-     * The storage strategy.
-     *
-     * @var Storage
-     */
-    private $storage;
-
-    /**
      * Constructor.
      *
      * @param FormWrapperRegistry $formWrapperRegistry The form wrapper registry
      */
     public function __construct(FormWrapperRegistry $formWrapperRegistry)
     {
-        $this->storage = new YamlStorage(); // TODO: This is hardcoded for now
         $this->formWrapperRegistry = $formWrapperRegistry;
         $this->forms = [];
         add_filter('set-screen-option', function ($status, $option, $value) {
@@ -116,7 +104,7 @@ class Admin
                 $name,
                 new LogsTable(
                     $formWrapper->getName(),
-                    $this->storage
+                    $this->storage($formWrapper)
                 )
             );
 
@@ -130,6 +118,26 @@ class Admin
             );
             add_action("load-$subMenu", [$view, 'screenOptions']);
         }
+    }
+
+    /**
+     * Resolves and gets the proper storage for the given form wrapper.
+     *
+     * @param FormWrapper $formWrapper The form wrapper
+     *
+     * @throws ActionNotFoundException when required action type not found
+     *
+     * @return Storage
+     */
+    private function storage(FormWrapper $formWrapper)
+    {
+        foreach ($formWrapper->getSuccessActions() as $action) {
+            if ($action instanceof LocalStorageAction) {
+                return new YamlStorage();
+            }
+        }
+
+        throw new ActionNotFoundException();
     }
 
     /**
