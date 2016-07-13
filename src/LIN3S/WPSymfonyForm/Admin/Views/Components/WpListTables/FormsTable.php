@@ -108,9 +108,7 @@ class FormsTable extends \WP_List_Table
     {
         ?>
         <div class="meta-box-sortables ui-sortable">
-            <form method="post">
-                <?php parent::display(); ?>
-            </form>
+            <?php parent::display(); ?>
         </div>
         <?php
 

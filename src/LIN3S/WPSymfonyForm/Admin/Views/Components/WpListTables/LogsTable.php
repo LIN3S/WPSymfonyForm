@@ -116,18 +116,7 @@ class LogsTable extends \WP_List_Table
     {
         ?>
         <div class="meta-box-sortables ui-sortable">
-            <form action="" method="get">
-                <?php
-                $this->search_box(__('Search', \WPSymfonyForm::TRANSLATION_DOMAIN), 'search-id');
-        foreach ($_GET as $key => $value) {
-            if ('s' !== $key) {
-                echo "<input type='hidden' name='$key' value='$value' />";
-            }
-        } ?>
-            </form>
-            <form method="post">
-                <?php parent::display(); ?>
-            </form>
+            <?php parent::display(); ?>
         </div>
         <?php
 
