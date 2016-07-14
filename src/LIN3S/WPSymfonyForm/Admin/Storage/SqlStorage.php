@@ -19,11 +19,11 @@ namespace LIN3S\WPSymfonyForm\Admin\Storage;
 class SqlStorage implements Storage
 {
     /**
-     * The pdo instance.
+     * The WPDB instance.
      *
-     * @var \PDO
+     * @var \wpdb
      */
-    private $pdo;
+    private $db;
 
     /**
      * The table name.
@@ -35,15 +35,14 @@ class SqlStorage implements Storage
     /**
      * Constructor.
      *
-     * @param \PDO        $aPdo     The pdo instance
      * @param string|null $formType The form type
      */
-    public function __construct(\PDO $aPdo, $formType = null)
+    public function __construct($formType = null)
     {
-        $this->pdo = $aPdo;
-        $this->table = null === $formType
-            ? 'wp_symfony_form_log'
-            : 'wp_symfony_form_' . $formType . '_log';
+        global $wpdb;
+
+        $this->db = $wpdb;
+        $this->table = $this->table($formType);
     }
 
     /**
@@ -51,18 +50,15 @@ class SqlStorage implements Storage
      */
     public function findAll($limit, $offset)
     {
-        $statement = $this->pdo->prepare('SELECT * FROM ' . $this->table . ' LIMIT :offset, :limit ORDER BY :orderBy :order');
-        $statement->execute(
-            array_merge(
-                [
-                    'offset' => $offset,
-                    'limit'  => $limit,
-                ],
-                $this->sort()
-            )
+        $sql = $this->db->prepare(
+            "SELECT * FROM $this->table ORDER BY %s %s LIMIT %d OFFSET %d",
+            $this->sort()['orderBy'],
+            $this->sort()['order'],
+            $limit,
+            $offset - 1
         );
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->db->get_results($sql, 'ARRAY_A');
     }
 
     /**
@@ -71,23 +67,22 @@ class SqlStorage implements Storage
     public function query(array $criteria, $limit, $offset)
     {
         $where = ' WHERE';
-        foreach ($criteria as $singleCriteria) {
-            $where .= ' :' . $singleCriteria;
+        foreach ($criteria as $criteriaName => $criteriaValue) {
+            $where .= ' ' . $criteriaName . ' = ' . $criteriaValue;
+        }
+        if (count($criteria) === 0 || (count($criteria) === 1 && array_key_exists('formType', $criteria))) {
+            return $this->findAll($limit, $offset);
         }
 
-        $statement = $this->pdo->prepare('SELECT * FROM ' . $this->table . $where . ' LIMIT :offset, :limit ORDER BY :orderBy :order');
-        $statement->execute(
-            array_merge(
-                $criteria,
-                [
-                    'offset' => $offset,
-                    'limit'  => $limit,
-                ],
-                $this->sort()
-            )
+        $sql = $this->db->prepare(
+            "SELECT * FROM $this->table $where ORDER BY %s %s LIMIT %d OFFSET %d",
+            $this->sort()['orderBy'],
+            $this->sort()['order'],
+            $limit,
+            $offset - 1
         );
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->db->get_results($sql, 'ARRAY_A');
     }
 
     /**
@@ -96,10 +91,8 @@ class SqlStorage implements Storage
     public function properties()
     {
         $columns = [];
-        $result = $this->pdo->query('SELECT * FROM ' . $this->table . ' LIMIT 0');
-        for ($i = 0; $i < $result->columnCount(); $i++) {
-            $meta = $result->getColumnMeta($i);
-            $columns[] = $meta['name'];
+        foreach ($this->db->get_col('DESC ' . $this->table, 0) as $column) {
+            $columns[] = $column;
         }
 
         return count($columns) > 0 ? $columns : null;
@@ -110,10 +103,7 @@ class SqlStorage implements Storage
      */
     public function size()
     {
-        return
-            $this->pdo
-                ->query('SELECT COUNT(*) FROM ' . $this->table)
-                ->fetchColumn();
+        return $this->db->get_var("SELECT COUNT(*) FROM $this->table");
     }
 
     /**
@@ -134,5 +124,58 @@ class SqlStorage implements Storage
         }
 
         return ['orderBy' => $orderBy, 'order' => $order];
+    }
+
+    /**
+     * Creates the table if not exist and returns the table name.
+     *
+     * @param string|null $formType   The form type
+     * @param array       $columnData The column data
+     *
+     * @return string
+     */
+    public static function initSchema($formType, $columnData)
+    {
+        $columns = '';
+        foreach ($columnData as $name => $column) {
+            if ($column === reset($columnData)) {
+                if ($column instanceof \DateTimeInterface) {
+                    $columns .= $name . ' DATETIME NOT NULL';
+                    continue;
+                }
+                $columns .= $name . ' VARCHAR(600)';
+                continue;
+            }
+            if ($column instanceof \DateTimeInterface) {
+                $columns .= $name . ' DATETIME NOT NULL';
+                continue;
+            }
+            $columns .= ', ' . $name . ' VARCHAR(600)';
+        }
+        $sql = sprintf(
+            'CREATE TABLE IF NOT EXISTS `' . self::table($formType) . '` (
+ `id` int(10) NOT NULL AUTO_INCREMENT, %s, PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;',
+            $columns
+        );
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        dbDelta($sql);
+
+        return self::table($formType);
+    }
+
+    /**
+     * Gets the built table of database.
+     *
+     * @param string|null $formType The form type
+     *
+     * @return string
+     */
+    private function table($formType)
+    {
+        return null === $formType
+            ? 'wp_symfony_form_log'
+            : 'wp_symfony_form_' . $formType . '_log';
     }
 }

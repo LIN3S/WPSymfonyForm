@@ -12,8 +12,10 @@
 namespace LIN3S\WPSymfonyForm\Admin;
 
 use LIN3S\WPSymfonyForm\Action\ActionNotFoundException;
+use LIN3S\WPSymfonyForm\Action\DatabaseStorageAction;
 use LIN3S\WPSymfonyForm\Action\LocalStorageAction;
 use LIN3S\WPSymfonyForm\Admin\Storage\InMemoryStorage;
+use LIN3S\WPSymfonyForm\Admin\Storage\SqlStorage;
 use LIN3S\WPSymfonyForm\Admin\Storage\Storage;
 use LIN3S\WPSymfonyForm\Admin\Storage\YamlStorage;
 use LIN3S\WPSymfonyForm\Admin\Views\Components\FormsTable;
@@ -134,6 +136,9 @@ class Admin
         foreach ($formWrapper->getSuccessActions() as $action) {
             if ($action instanceof LocalStorageAction) {
                 return new YamlStorage($formWrapper->getName());
+            }
+            if ($action instanceof DatabaseStorageAction) {
+                return new SqlStorage($formWrapper->getName());
             }
         }
 
