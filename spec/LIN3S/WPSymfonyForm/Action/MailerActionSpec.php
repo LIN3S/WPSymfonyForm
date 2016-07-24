@@ -14,7 +14,6 @@ namespace spec\LIN3S\WPSymfonyForm\Action;
 use LIN3S\WPSymfonyForm\Action\Action;
 use LIN3S\WPSymfonyForm\Action\MailerAction;
 use PhpSpec\ObjectBehavior;
-use Symfony\Component\Form\FormInterface;
 
 /**
  * Spec file of MailerAction.

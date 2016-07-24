@@ -19,9 +19,10 @@ new WPSymfonyForm();
 final class WPSymfonyForm
 {
     const VERSION = '0.4.0';
+    const TRANSLATION_DOMAIN = 'WP Symfony Form';
 
     /**
-     * Construtor.
+     * Constructor.
      */
     public function __construct()
     {
@@ -51,5 +52,7 @@ final class WPSymfonyForm
         wp_localize_script('wp-symfony-form', 'WPSymfonyFormSettings', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
         ]);
+
+        new \LIN3S\WPSymfonyForm\Admin\Admin($registry);
     }
 }
